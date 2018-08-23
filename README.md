@@ -68,3 +68,7 @@ Atom (stable and beta) is installed as a Homebrew cask. To configure:
 1. Symlink the config directory `ln -s ~/dotfiles/atom .atom`
 2. Install the `package-sync`  package `apm install package sync`
 3. Launch atom, if packages are not installed automatically, run `Sync packages` from the command pallet
+
+## Emacs / spacemacs
+1. `ln -s ~/dotfiles/spacemacs .spacemacs`
+2. `git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d`

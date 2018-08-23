@@ -19,4 +19,4 @@ eval "$(thefuck --alias fuck)"
 . `brew --prefix`/etc/profile.d/z.sh
 
 ### OTHER ###
-export HOMEBREW_GITHUB_API_TOKEN="3922aa1e853ad6f3cdd2c8a0f5f3bd306740f4c0"
+export HOMEBREW_GITHUB_API_TOKEN=""

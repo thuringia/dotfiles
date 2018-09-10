@@ -16,9 +16,10 @@ export EDITOR=vim
 
 # load zplug
 # https://github.com/zplug/zplug
-export ZPLUG_HOME=/usr/local/opt/zplug
-source $ZPLUG_HOME/init.zsh
+[ -s /usr/local/opt/zplug ] && export ZPLUG_HOME=/usr/local/opt/zplug
+[ -s ~/.zplug ] && export ZPLUG_HOME=~/.zplug
 
+source $ZPLUG_HOME/init.zsh
 zplug "lib/clipboard", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
 
 # Bundles from the default repo (robbyrussell's oh-my-zsh).
@@ -47,8 +48,8 @@ zplug "gusaiani/elixir-oh-my-zsh"
 zplug "g-plane/zsh-yarn-autocompletions", hook-build:"./zplug.zsh", defer:2
 
 # enhance git
-#zplug "plugins/git", from:oh-my-zsh
-#zplug "unixorn/git-extra-commands"
+zplug "plugins/git", from:oh-my-zsh
+zplug "unixorn/git-extra-commands"
 zplug "smallhadroncollider/antigen-git-rebase"
 zplug "zdharma/zsh-diff-so-fancy", as:command, use:bin/git-dsf
 

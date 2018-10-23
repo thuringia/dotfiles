@@ -14,6 +14,11 @@ alias npms="npm start"
 
 export EDITOR=vim
 
+POWERLEVEL9K_CONTEXT_TEMPLATE="%n"
+POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
+POWERLEVEL9K_SHORTEN_DELIMITER=""
+POWERLEVEL9K_SHORTEN_STRATEGY="truncate_from_right"
+
 # load zplug
 # https://github.com/zplug/zplug
 [ -s /usr/local/opt/zplug ] && export ZPLUG_HOME=/usr/local/opt/zplug

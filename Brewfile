@@ -6,6 +6,7 @@ tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "homebrew/services"
+tap "mas-cli/tap"
 tap "railwaycat/emacsmacport"
 brew "oniguruma"
 brew "jq"
@@ -102,6 +103,7 @@ brew "z"
 brew "zplug"
 brew "zsh"
 brew "d12frosted/emacs-plus/emacs-plus", args: ["HEAD", "with-emacs-27-branch"]
+brew "mas-cli/tap/mas"
 brew "railwaycat/emacsmacport/emacs-mac", args: ["HEAD", "with-imagemagick", "with-spacemacs-icon", "with-xml2"], link: false
 cask "1password"
 cask "alfred"
@@ -116,6 +118,7 @@ cask "docker"
 cask "firefox-developer-edition"
 cask "font-fira-code"
 cask "font-hack-nerd-font"
+cask "google-backup-and-sync"
 cask "google-chrome-canary"
 cask "istat-menus"
 cask "iterm2"
@@ -140,3 +143,7 @@ cask "visual-studio-code-insiders"
 cask "vlc"
 cask "whatsapp"
 cask "zeplin"
+mas "Fantastical", id: 975937182
+mas "John's Background Switcher", id: 907640277
+mas "Reeder", id: 1449412482
+mas "Todoist", id: 585829637

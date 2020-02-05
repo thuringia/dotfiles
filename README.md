@@ -16,6 +16,9 @@ If it is available via Homebrew, cask or otherwise, install it from there and up
 Download everything by running
 `brew bundle ~/dotfiles/Brewfile`
 
+### Software from Mac App Store
+Software from MAS will be installed by Homebrew using [`mas-cli`](https://github.com/mas-cli/mas) and will be installed using the `Brewfile`
+
 ## Shell setup
 The setup is managed by [zplug](https://github.com/zplug/zplug). Binary packages are contained in `Brewfile`, everything else will be installed automatically by zplug.
 

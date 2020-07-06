@@ -34,18 +34,14 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layers
    '(
      typescript
-     php
+     ;;php
      ;;python
-     ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
-     ;; `M-m f e R' (Emacs style) to install them.
-     ;; ----------------------------------------------------------------
      auto-completion
      better-defaults
      (colors :variables
              colors-colorize-identifiers 'variables)
-     elixir
+     (docker :variables docker-dockerfile-backend 'lsp)
+     ;;elixir
      emacs-lisp
      emoji
 		 ;;erc
@@ -58,13 +54,21 @@ This function should only modify configuration layer settings."
               ibuffer-group-buffers-by 'projects)
      ;;ivy
      helm
-     javascript
+     (javascript :variables
+                 javascript-backend 'lsp
+                 javascript-fmt-tool 'prettier
+                 javascript-fmt-on-save t
+                 node-add-modules-path t)
+     (json :variables
+           json-fmt-tool 'prettier
+           json-fmt-on-save t)
      lsp
      markdown
      multiple-cursors
      org
      (osx :variables
 					osx-use-option-as-meta nil)
+     prettier
      react
      restclient
      ;;(ruby :variables
@@ -76,7 +80,7 @@ This function should only modify configuration layer settings."
      syntax-checking
      treemacs
      version-control
-     yaml
+     (yaml :variables yaml-enable-lsp t)
      )
 
    ;; List of additional packages that will be installed without being
@@ -236,7 +240,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Fira Code"
-                               :size 14.0
+                               :size 10.0
                                :weight normal
                                :width normal)
 
@@ -681,7 +685,7 @@ This function is called at the very end of Spacemacs initialization."
  '(nrepl-message-colors
    '("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4"))
  '(package-selected-packages
-   '(restclient-helm lsp-ui lsp-treemacs helm-xref helm-purpose helm-org-rifle helm-org helm-lsp helm-ls-git helm-git-grep company-lsp lsp-mode lv transient all-the-icons memoize org-mime ghub let-alist tide typescript-mode org-category-capture emoji-cheat-sheet-plus company-emoji langtool flyspell-popup flyspell-correct-ivy flyspell-correct auto-dictionary phpunit phpcbf php-extras php-auto-yasnippets drupal-mode php-mode winum unfill ob-restclient ob-elixir fuzzy flycheck-mix flycheck-credo company-restclient know-your-http-well alchemist elixir-mode gitlab wgrep smex ivy-hydra counsel-projectile counsel swiper ivy zenburn-theme monokai-theme material-theme solarized-theme spinner pcre2el org alert log4e gntp json-snatcher json-reformat multiple-cursors parent-mode haml-mode gitignore-mode fringe-helper git-gutter+ pos-tip epl flx anzu evil goto-chg undo-tree web-completion-data dash-functional packed f dash s avy auto-complete popup package-build yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic xterm-color which-key web-mode use-package spacemacs-theme spaceline smeargle pug-mode persp-mode osx-dictionary org-projectile org-plus-contrib org-download open-junk-file ob-http neotree move-text markdown-toc markdown-mode link-hint info+ indent-guide htmlize hide-comnt helm-projectile helm-flx helm-ag google-translate git-messenger git-link git-gutter-fringe eyebrowse exec-path-from-shell evil-mc eshell-z editorconfig dumb-jump company-statistics chruby bind-key aggressive-indent ace-link iedit smartparens bind-map highlight flycheck company request helm helm-core projectile yasnippet skewer-mode js2-mode magit magit-popup git-commit with-editor hydra inf-ruby tern yaml-mode ws-butler window-numbering web-beautify wakatime-mode volatile-highlights vi-tilde-fringe uuidgen toc-org tern-auto-complete tagedit slim-mode simple-httpd shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restclient restart-emacs rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters quelpa powerline popwin pkg-info pcache pbcopy paradox osx-trash orgit org-present org-pomodoro org-bullets mwim multi-term mmm-mode minitest magit-gitflow macrostep lorem-ipsum livid-mode linum-relative less-css-mode launchctl json-mode js2-refactor js-doc ido-vertical-mode ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-mode-manager helm-make helm-gitignore helm-descbinds helm-css-scss helm-company helm-c-yasnippet graphviz-dot-mode golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-gutter-fringe+ git-gutter gh-md flycheck-pos-tip flycheck-flow flx-ido fill-column-indicator fancy-battery expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode elisp-slime-nav diminish diff-hl company-web company-tern company-flow column-enforce-mode color-theme-sanityinc-tomorrow color-identifiers-mode coffee-mode clean-aindent-mode bundler auto-yasnippet auto-highlight-symbol auto-compile async adaptive-wrap ace-window ace-jump-helm-line ac-ispell))
+   '(dockerfile-mode docker tablist docker-tramp lv transient all-the-icons memoize org-mime ghub let-alist tide typescript-mode org-category-capture emoji-cheat-sheet-plus company-emoji langtool flyspell-popup flyspell-correct-ivy flyspell-correct auto-dictionary phpunit phpcbf php-extras php-auto-yasnippets drupal-mode php-mode winum unfill ob-restclient ob-elixir fuzzy flycheck-mix flycheck-credo company-restclient know-your-http-well alchemist elixir-mode gitlab wgrep smex ivy-hydra counsel-projectile counsel swiper ivy zenburn-theme monokai-theme material-theme solarized-theme spinner pcre2el org alert log4e gntp json-snatcher json-reformat multiple-cursors parent-mode haml-mode gitignore-mode fringe-helper git-gutter+ pos-tip epl flx anzu evil goto-chg undo-tree web-completion-data dash-functional packed f dash s avy auto-complete popup package-build yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic xterm-color which-key web-mode use-package spacemacs-theme spaceline smeargle pug-mode persp-mode osx-dictionary org-projectile org-plus-contrib org-download open-junk-file ob-http neotree move-text markdown-toc markdown-mode link-hint info+ indent-guide htmlize hide-comnt helm-projectile helm-flx helm-ag google-translate git-messenger git-link git-gutter-fringe eyebrowse exec-path-from-shell evil-mc eshell-z editorconfig dumb-jump company-statistics chruby bind-key aggressive-indent ace-link iedit smartparens bind-map highlight flycheck company request helm helm-core projectile yasnippet skewer-mode js2-mode magit magit-popup git-commit with-editor hydra inf-ruby tern yaml-mode ws-butler window-numbering web-beautify wakatime-mode volatile-highlights vi-tilde-fringe uuidgen toc-org tern-auto-complete tagedit slim-mode simple-httpd shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restclient restart-emacs rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters quelpa powerline popwin pkg-info pcache pbcopy paradox osx-trash orgit org-present org-pomodoro org-bullets mwim multi-term mmm-mode minitest magit-gitflow macrostep lorem-ipsum livid-mode linum-relative less-css-mode launchctl json-mode js2-refactor js-doc ido-vertical-mode ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-mode-manager helm-make helm-gitignore helm-descbinds helm-css-scss helm-company helm-c-yasnippet graphviz-dot-mode golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-gutter-fringe+ git-gutter gh-md flycheck-pos-tip flycheck-flow flx-ido fill-column-indicator fancy-battery expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode elisp-slime-nav diminish diff-hl company-web company-tern company-flow column-enforce-mode color-theme-sanityinc-tomorrow color-identifiers-mode coffee-mode clean-aindent-mode bundler auto-yasnippet auto-highlight-symbol auto-compile async adaptive-wrap ace-window ace-jump-helm-line ac-ispell))
  '(pos-tip-background-color "#A6E22E")
  '(pos-tip-foreground-color "#272822")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))

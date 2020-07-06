@@ -1,3 +1,7 @@
+unsetopt BG_NICE
+export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+export LIBGL_ALWAYS_INDIRECT=1
+
 # Customize to your needs...
 export PATH="/bin:/sbin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/robert/.local/bin:/home/robert/bin:$PATH"
 

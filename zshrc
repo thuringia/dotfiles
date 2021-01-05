@@ -30,8 +30,8 @@ zplug "plugins/node", from:oh-my-zsh
 
 
 # customize prompt
-#zplug "zsh-users/fizsh"
-#zplug "zsh-users/zsh-completions"
+zplug "zsh-users/fizsh"
+zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-autosuggestions"
 zplug "felixgravila/zsh-abbr-path"
@@ -41,9 +41,9 @@ zplug "hlissner/zsh-autopair", defer:2
 # add quality of life
 zplug "popstas/zsh-command-time"
 zplug "djui/alias-tips"
-#zplug "timothyrowan/betterbrew-zsh-plugin"
+zplug "timothyrowan/betterbrew-zsh-plugin", if:"[[ $OSTYPE == *darwin* ]]"
 zplug "gusaiani/elixir-oh-my-zsh"
-#zplug "g-plane/zsh-yarn-autocompletions", hook-build:"./zplug.zsh", defer:2
+zplug "g-plane/zsh-yarn-autocompletions", hook-build:"./zplug.zsh", defer:2
 zplug "agkozak/zsh-z"
 
 # enhance git

@@ -1,16 +1,5 @@
-dotfiles="$HOME/Dropbox/dotfiles"
-
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
 alias mv="mv -v"
-alias ls="colorls"
-alias ll="colorls -lA --sd"
-
-alias wds="webpack-dev-server"
 alias sv="sudo vim"
-alias npms="npm start"
 
 export EDITOR=vim
 
@@ -68,6 +57,8 @@ zplug "walesmd/caniuse.plugin.zsh", \
   defer:2, \
   rename-to:caniuse
 
+zplug "mattberther/zsh-pyenv"
+
 # Load the theme.
 zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
 #antigen theme agnoster
@@ -83,8 +74,3 @@ fi
 # Then, source plugins and add commands to $PATH
 #zplug load --verbose
 zplug load
-
-# added by travis gem
-[ -f /Users/rwa/.travis/travis.sh ] && source /Users/rwa/.travis/travis.sh
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

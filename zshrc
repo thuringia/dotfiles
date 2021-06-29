@@ -57,7 +57,7 @@ zplug "walesmd/caniuse.plugin.zsh", \
   defer:2, \
   rename-to:caniuse
 
-zplug "mattberther/zsh-pyenv"
+#zplug "mattberther/zsh-pyenv"
 
 # Load the theme.
 zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme

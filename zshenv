@@ -5,14 +5,13 @@ if [ -n "${WSL_DISTRO_NAME+set}" ]; then
 	export LIBGL_ALWAYS_INDIRECT=1
 fi
 
-# Customize to your needs...
-export PATH="/bin:/sbin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/robert/.local/bin:/home/robert/bin:$PATH"
-
-### add to $PATH ###
-export PATH="$PATH:`yarn global bin`" # add yarn global packages to path
-export PATH="$PATH:$HOME/.config/yarn/global/node_modules/.bin/"
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-export PATH="$HOME/.poetry/bin:$PATH"
+unset HOMEBREW_SHELLENV_PREFIX 
+system=`uname -a`
+if [[ $system == *_ARM64_* ]]; then
+	#export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+        eval $(/opt/homebrew/bin/brew shellenv)
+	export PATH="/opt/homebrew/opt/python@3.9/libexec/bin:$PATH"
+fi
 
 ### thefuck ###
 if [ -x "$(command -v thefuck)" ]; then
@@ -25,6 +24,7 @@ if [ -x "$(command -v awsume)" ]; then
 fi
 
 # set up homebrew-based tools
+
 if [ -x "$(command -v brew)" ]; then
 	### z - fast cd ###
 	. `brew --prefix`/etc/profile.d/z.sh
@@ -32,3 +32,4 @@ fi
 
 ### OTHER ###
 export HOMEBREW_GITHUB_API_TOKEN=""
+

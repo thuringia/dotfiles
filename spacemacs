@@ -27,7 +27,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-ask-for-lazy-installation t
 
    ;; List of additional paths where to look for configuration layers.
-   ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
+   ;; Paths must have a trailing slash (i.e. "~/.mycontribs/")
    dotspacemacs-configuration-layer-path '()
 
    ;; List of configuration layers to load.
@@ -35,75 +35,71 @@ This function should only modify configuration layer settings."
    '(csv
      ;;rust
      ;;php
-     ;;python
-     auto-completion
+     ;;python auto-completion
      better-defaults
-     (colors :variables
-             colors-colorize-identifiers 'variables)
+     (colors :variables colors-colorize-identifiers 'variables)
      (docker :variables docker-dockerfile-backend 'lsp)
      ;;elixir
      emacs-lisp
      emoji
-		 ;;erc
+     ;;erc
      ;;flow-type
-     (git :variables
-          git-magit-status-fullscreen t
-          git-enable-github-support t)
-     github
+     (git :variables git-magit-status-fullscreen t
+                     git-enable-github-support t)
+     graphviz
      html
-     (ibuffer :variables
-              ibuffer-group-buffers-by 'projects)
+     (ibuffer :variables ibuffer-group-buffers-by 'projects)
      ;;ivy
      helm
-     (javascript :variables
-                 javascript-backend 'lsp
-                 javascript-fmt-tool 'prettier
-                 javascript-import-tool 'import-js
-                 javascript-fmt-on-save t
-                 javascript-lsp-linter nil
-                 node-add-modules-path t)
-     (typescript :variables
-                 typescript-fmt-tool 'prettier
-                 typescript-fmt-on-save t
-                 typescript-linter 'eslint
-                 typescript-backend 'lsp
-                 typescript-lsp-linter nil)
-     (json :variables
-           json-fmt-tool 'prettier
-           json-fmt-on-save t)
+     (javascript :variables javascript-backend     'lsp
+                            javascript-fmt-tool    'prettier
+                            javascript-import-tool 'import-js
+                            javascript-fmt-on-save t
+                            javascript-lsp-linter  nil
+                            node-add-modules-path  t)
+     (typescript :variables typescript-fmt-tool    'prettier
+                            typescript-fmt-on-save t
+                            typescript-linter      'eslint
+                            typescript-backend     'lsp
+                            typescript-lsp-linter  nil)
+     (json :variables json-fmt-tool    'prettier
+                      json-fmt-on-save t)
      lsp
      markdown
      multiple-cursors
      org
-     (osx :variables
-					osx-use-option-as-meta nil)
+     (osx :variables osx-option-as 'none) 
      prettier
      react
      restclient
      ;;(ruby :variables
      ;;      ruby-version-manager 'rvm)
-     (shell :variables
-       shell-default-height 30
-       shell-default-position 'bottom
-       shell-default-term-shell "/usr/local/bin/zsh")
+     semantic
+     (shell :variables shell-default-height
+            30 shell-default-position 'bottom shell-default-term-shell
+            "/usr/local/bin/zsh")
      syntax-checking
-     treemacs
+     (terraform :variables terraform-auto-format-on-save
+                t terraform-backend 'lsp)
+     (treemacs :variables treemacs-use-follow-mode
+               t treemacs-use-filewatch-mode t treemacs-use-git-mode
+               'deferred treemacs-use-all-the-icons-theme
+               t)
      version-control
-     (yaml :variables yaml-enable-lsp t)
-     )
-
-   ;; List of additional packages that will be installed without being
-   ;; wrapped in a layer. If you need some configuration for these
-   ;; packages, then consider creating a layer. You can also put the
-   ;; configuration in `dotspacemacs/user-config'.
-   ;; To use a local version of a package, use the `:location' property:
-   ;; '(your-package :location "~/path/to/your-package/")
+     (yaml :variables yaml-enable-lsp
+           t))
+   ;; List of additional packages that will be installed without being wrapped
+   ;; in a layer (generally the packages are installed only and should still be
+   ;; loaded using load/require/use-package in the user-config section below in
+   ;; this file). If you need some configuration for these packages, then
+   ;; consider creating a layer. You can also put the configuration in
+   ;; `dotspacemacs/user-config'. To use a local version of a package, use the
+   ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(graphviz-dot-mode
-                                      editorconfig
-                                      all-the-icons)
-                                      ;;flycheck-flow)
-
+   dotspacemacs-additional-packages
+   '((copilot :location (recipe :fetcher github
+                                :repo "zerolfx/copilot.el"
+                                :files ("*.el" "dist"))))
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
 
@@ -127,9 +123,13 @@ It should only modify the values of Spacemacs settings."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
-   ;; If non-nil then enable support for the portable dumper. You'll need
-   ;; to compile Emacs 27 from source following the instructions in file
+   ;; If non-nil then enable support for the portable dumper. You'll need to
+   ;; compile Emacs 27 from source following the instructions in file
    ;; EXPERIMENTAL.org at to root of the git repository.
+   ;;
+   ;; WARNING: pdumper does not work with Native Compilation, so it's disabled
+   ;; regardless of the following setting when native compilation is in effect.
+   ;;
    ;; (default nil)
    dotspacemacs-enable-emacs-pdumper nil
 
@@ -142,9 +142,9 @@ It should only modify the values of Spacemacs settings."
    ;; portable dumper in the cache directory under dumps sub-directory.
    ;; To load it when starting Emacs add the parameter `--dump-file'
    ;; when invoking Emacs 27.1 executable on the command line, for instance:
-   ;;   ./emacs --dump-file=~/.emacs.d/.cache/dumps/spacemacs.pdmp
-   ;; (default spacemacs.pdmp)
-   dotspacemacs-emacs-dumper-dump-file "spacemacs.pdmp"
+   ;;   ./emacs --dump-file=$HOME/.emacs.d/.cache/dumps/spacemacs-27.1.pdmp
+   ;; (default (format "spacemacs-%s.pdmp" emacs-version))
+   dotspacemacs-emacs-dumper-dump-file (format "spacemacs-%s.pdmp" emacs-version)
 
    ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
    ;; possible. Set it to nil if you have no way to use HTTPS in your
@@ -164,9 +164,18 @@ It should only modify the values of Spacemacs settings."
    ;; (default '(100000000 0.1))
    dotspacemacs-gc-cons '(100000000 0.1)
 
+   ;; Set `read-process-output-max' when startup finishes.
+   ;; This defines how much data is read from a foreign process.
+   ;; Setting this >= 1 MB should increase performance for lsp servers
+   ;; in emacs 27.
+   ;; (default (* 1024 1024))
+   dotspacemacs-read-process-output-max (* 1024 1024)
+
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the
-   ;; latest version of packages from MELPA. (default nil)
+   ;; latest version of packages from MELPA. Spacelpa is currently in
+   ;; experimental state please use only for testing purposes.
+   ;; (default nil)
    dotspacemacs-use-spacelpa nil
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
@@ -192,6 +201,11 @@ It should only modify the values of Spacemacs settings."
    ;; (default 'vim)
    dotspacemacs-editing-style 'vim
 
+   ;; If non-nil show the version string in the Spacemacs buffer. It will
+   ;; appear as (spacemacs version)@(emacs version)
+   ;; (default t)
+   dotspacemacs-startup-buffer-show-version t
+
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
    ;; banner, `random' chooses a random text banner in `core/banners'
@@ -200,17 +214,39 @@ It should only modify the values of Spacemacs settings."
    ;; If the value is nil then no banner is displayed. (default 'official)
    dotspacemacs-startup-banner 'official
 
+   ;; Scale factor controls the scaling (size) of the startup banner. Default
+   ;; value is `auto' for scaling the logo automatically to fit all buffer
+   ;; contents, to a maximum of the full image height and a minimum of 3 line
+   ;; heights. If set to a number (int or float) it is used as a constant
+   ;; scaling factor for the default logo size.
+   dotspacemacs-startup-banner-scale 'auto
+
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
-   ;; `recents' `bookmarks' `projects' `agenda' `todos'.
+   ;; `recents' `recents-by-project' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
+   ;; The exceptional case is `recents-by-project', where list-type must be a
+   ;; pair of numbers, e.g. `(recents-by-project . (7 .  5))', where the first
+   ;; number is the project limit and the second the limit on the recent files
+   ;; within a project.
    dotspacemacs-startup-lists '((recents . 5)
                                 (projects . 7))
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
+
+   ;; Show numbers before the startup list lines. (default t)
+   dotspacemacs-show-startup-list-numbers t
+
+   ;; The minimum delay in seconds between number key presses. (default 0.4)
+   dotspacemacs-startup-buffer-multi-digit-delay 0.4
+
+   ;; If non-nil, show file icons for entries and headings on Spacemacs home buffer.
+   ;; This has no effect in terminal or if "all-the-icons" package or the font
+   ;; is not installed. (default nil)
+   dotspacemacs-startup-buffer-show-icons nil
 
    ;; Default major mode for a new empty buffer. Possible values are mode
    ;; names such as `text-mode'; and `nil' to use Fundamental mode.
@@ -220,6 +256,14 @@ It should only modify the values of Spacemacs settings."
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
 
+   ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
+   ;; *scratch* buffer will be saved and restored automatically.
+   dotspacemacs-scratch-buffer-persistent nil
+
+   ;; If non-nil, `kill-buffer' on *scratch* buffer
+   ;; will bury it instead of killing.
+   dotspacemacs-scratch-buffer-unkillable nil
+
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
    dotspacemacs-initial-scratch-message nil
@@ -227,13 +271,9 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(sanityinc-tomorrow-blue
-                         spacemacs-dark
-                         spacemacs-light
-                         solarized-light
-                         solarized-dark
-                         material)
-
+   dotspacemacs-themes
+   '(sanityinc-tomorrow-blue spacemacs-dark spacemacs-light
+                             solarized-light solarized-dark material)
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
    ;; first three are spaceline themes. `doom' is the doom-emacs mode-line.
@@ -245,14 +285,13 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
-   dotspacemacs-colorize-cursor-according-to-state t
-
+   dotspacemacs-colorize-cursor-according-to-state
+   t
    ;; Default font or prioritized list of fonts.
-   dotspacemacs-default-font '("Fira Code"
-                               :size 14.0
-                               :weight normal
-                               :width normal)
-
+   dotspacemacs-default-font
+   '("Fira Code" :size 14.0
+     :weight normal
+     :width normal)
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
 
@@ -272,8 +311,10 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-major-mode-leader-key ","
 
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
-   ;; (default "C-M-m")
-   dotspacemacs-major-mode-emacs-leader-key "C-M-m"
+   ;; (default "C-M-m" for terminal mode, "<M-return>" for GUI mode).
+   ;; Thus M-RET should work as leader key in both GUI and terminal modes.
+   ;; C-M-m also should work in terminal mode, but not in GUI mode.
+   dotspacemacs-major-mode-emacs-leader-key (if window-system "<M-return>" "C-M-m")
 
    ;; These variables control whether separate commands are bound in the GUI to
    ;; the key pairs `C-i', `TAB' and `C-m', `RET'.
@@ -349,12 +390,12 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
-   ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup nil
+   ;; (default t) (Emacs 24.4+ only)
+   dotspacemacs-maximized-at-startup t
 
    ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
-   ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
-   ;; borderless fullscreen. (default nil)
+   ;; variable with `dotspacemacs-maximized-at-startup' to obtain fullscreen
+   ;; without external boxes. Also disables the internal border. (default nil)
    dotspacemacs-undecorated-at-startup nil
 
    ;; A value from the range (0..100), in increasing opacity, which describes
@@ -366,6 +407,11 @@ It should only modify the values of Spacemacs settings."
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
    dotspacemacs-inactive-transparency 90
+
+   ;; A value from the range (0..100), in increasing opacity, which describes the
+   ;; transparency level of a frame background when it's active or selected. Transparency
+   ;; can be toggled through `toggle-background-transparency'. (default 90)
+   dotspacemacs-background-transparency 90
 
    ;; If non-nil show the titles of transient states. (default t)
    dotspacemacs-show-transient-state-title t
@@ -383,12 +429,16 @@ It should only modify the values of Spacemacs settings."
    ;; when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
 
+   ;; Show the scroll bar while scrolling. The auto hide time can be configured
+   ;; by setting this variable to a number. (default t)
+   dotspacemacs-scroll-bar-while-scrolling t
+
    ;; Control line numbers activation.
    ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
    ;; `prog-mode' and `text-mode' derivatives. If set to `relative', line
    ;; numbers are relative. If set to `visual', line numbers are also relative,
-   ;; but lines are only visual lines are counted. For example, folded lines
-   ;; will not be counted and wrapped lines are counted as multiple lines.
+   ;; but only visual lines are counted. For example, folded lines will not be
+   ;; counted and wrapped lines are counted as multiple lines.
    ;; This variable can also be set to a property list for finer control:
    ;; '(:relative nil
    ;;   :visual nil
@@ -401,15 +451,20 @@ It should only modify the values of Spacemacs settings."
    ;;   :size-limit-kb 1000)
    ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
-   dotspacemacs-line-numbers '(:relative t)
-
-   ;; Code folding method. Possible values are `evil' and `origami'.
+   dotspacemacs-line-numbers
+   '(:relative t)
+   ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
 
-   ;; If non-nil `smartparens-strict-mode' will be enabled in programming modes.
+   ;; If non-nil and `dotspacemacs-activate-smartparens-mode' is also non-nil,
+   ;; `smartparens-strict-mode' will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
+
+   ;; If non-nil smartparens-mode will be enabled in programming modes.
+   ;; (default t)
+   dotspacemacs-activate-smartparens-mode t
 
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc...
@@ -457,12 +512,20 @@ It should only modify the values of Spacemacs settings."
    ;; %n - Narrow if appropriate
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
+   ;; If nil then Spacemacs uses default `frame-title-format' to avoid
+   ;; performance issues, instead of calculating the frame title by
+   ;; `spacemacs/title-prepare' all the time.
    ;; (default "%I@%S")
    dotspacemacs-frame-title-format "%I@%S"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
+
+   ;; Color highlight trailing whitespace in all prog-mode and text-mode derived
+   ;; modes such as c++-mode, python-mode, emacs-lisp, html-mode, rst-mode etc.
+   ;; (default t)
+   dotspacemacs-show-trailing-whitespace t
 
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
@@ -471,6 +534,23 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil)
    dotspacemacs-whitespace-cleanup nil
 
+   ;; If non-nil activate `clean-aindent-mode' which tries to correct
+   ;; virtual indentation of simple modes. This can interfere with mode specific
+   ;; indent handling like has been reported for `go-mode'.
+   ;; If it does deactivate it here.
+   ;; (default t)
+   dotspacemacs-use-clean-aindent-mode t
+
+   ;; Accept SPC as y for prompts if non-nil. (default nil)
+   dotspacemacs-use-SPC-as-y nil
+
+   ;; If non-nil shift your number row to match the entered keyboard layout
+   ;; (only in insert state). Currently supported keyboard layouts are:
+   ;; `qwerty-us', `qwertz-de' and `querty-ca-fr'.
+   ;; New layouts can be added in `spacemacs-editing' layer.
+   ;; (default nil)
+   dotspacemacs-swap-number-row nil
+
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
    dotspacemacs-zone-out-when-idle nil
@@ -478,7 +558,14 @@ It should only modify the values of Spacemacs settings."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs nil))
+   dotspacemacs-pretty-docs nil
+
+   ;; If nil the home buffer shows the full path of agenda items
+   ;; and todos. If non-nil only the file name is shown.
+   dotspacemacs-home-shorten-agenda-source nil
+
+   ;; If non-nil then byte-compile some of Spacemacs files.
+   dotspacemacs-byte-compile t))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -486,76 +573,44 @@ This function defines the environment variables for your Emacs session. By
 default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
-  (spacemacs/load-spacemacs-env))
+  (spacemacs/load-spacemacs-env)
+)
 
 (defun dotspacemacs/user-init ()
-  "Initialization function for user code.
-It is called immediately after `dotspacemacs/init'.  You are free to put almost any
-user code here.  The exception is org related code, which should be placed in
-`dotspacemacs/user-config'."
-  ;; enable projectile caching
-  (setq projectile-enable-caching t)
+  "Initialization for user code:
+This function is called immediately after `dotspacemacs/init', before layer
+configuration.
+It is mostly for variables that should be set before packages are loaded.
+If you are unsure, try setting them in `dotspacemacs/user-config' first."
+)
 
-  ;;(setq flycheck-eslintrc nil)
-
-  (setq powerline-default-separator 'utf-8)
-
-  ;; set TRAMP to ssh instead of scp
-  (setq tramp-default-method "ssh")
-
-  ;; load rvm's default gemset
-  (eval-after-load 'rvm
-    (lambda()
-      (rvm-use-default)
-      ))
-
-  (setq whitespace-action '(auto-cleanup))
-
-  ;; disable shell env warning
-  (setq exec-path-from-shell-arguments '("-l"))
-  )
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
 dump."
-  )
+)
+
 
 (defun dotspacemacs/user-config ()
-  "Configuration function for user code.
-This function is called at the very end of Spacemacs initialization after
-layers configuration. You are free to put any user code."
-  ;; editorconfig
-  (editorconfig-mode 1)
-
-  (setq neo-theme 'icons)
-
-  (emoji-cheat-sheet-plus-display-mode)
-
-  (if (spacemacs/system-is-mac)
-      (setq mac-command-modifier 'meta
-            mac-option-modifier  'none))
-  
-  ;; https://github.com/purcell/exec-path-from-shell
-  ;; only need exec-path-from-shell on OSX
-  ;; this hopefully sets up path and other vars better
-  (when (memq window-system '(mac ns))
-    (exec-path-from-shell-initialize))
-  
-  ;; use local eslint from node_modules before global
-  ;; http://emacs.stackexchange.com/questions/21205/flycheck-with-file-relative-eslint-executable
-  (defun my/use-eslint-from-node-modules ()
-    (let* ((root (locate-dominating-file
-                  (or (buffer-file-name) default-directory)
-                  "node_modules"))
-           (eslint (and root
-                        (expand-file-name "node_modules/eslint/bin/eslint.js"
-                                          root))))
-      (when (and eslint (file-executable-p eslint))
-        (setq-local flycheck-javascript-eslint-executable eslint))))
-  ;;(add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
-)
+  "Configuration for user code:
+This function is called at the very end of Spacemacs startup, after layer
+configuration.
+Put your configuration code here, except for variables that should be set
+before packages are loaded."
+  ;; accept completion from copilot and fallback to company
+  ;; https://github.com/zerolfx/copilot.el
+  (with-eval-after-load 'company
+    ;; disable inline previews
+    (delq 'company-preview-if-just-one-frontend
+          company-frontends))
+  (with-eval-after-load 'copilot
+    (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+    (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion))
+  (add-hook 'prog-mode-hook 'copilot-mode)
+  (define-key evil-insert-state-map (kbd "C-<tab>") 'copilot-accept-completion-by-word)
+  (define-key evil-insert-state-map (kbd "C-TAB") 'copilot-accept-completion-by-word))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -564,10 +619,10 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["#272822" "#F92672" "#A6E22E" "#E6DB74" "#66D9EF" "#FD5FF0" "#A1EFE4" "#F8F8F2"])
+ '(ansi-color-faces-vector [default default default italic underline
+                                    success warning error])
+ '(ansi-color-names-vector ["#272822" "#F92672" "#A6E22E" "#E6DB74" "#66D9EF"
+                            "#FD5FF0" "#A1EFE4" "#F8F8F2"])
  '(compilation-message-face (quote default))
  '(cua-global-mark-cursor-color "#2aa198")
  '(cua-normal-cursor-color "#839496")
@@ -575,73 +630,135 @@ layers configuration. You are free to put any user code."
  '(cua-read-only-cursor-color "#859900")
  '(evil-want-Y-yank-to-eol nil)
  '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
- '(highlight-symbol-colors
-   (--map
-    (solarized-color-blend it "#002b36" 0.25)
-    (quote
-     ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
+ '(highlight-symbol-colors (--map (solarized-color-blend it "#002b36" 0.25)
+                                  (quote ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900"
+                                          "#cb4b16" "#268bd2"))))
  '(highlight-symbol-foreground-color "#93a1a1")
- '(highlight-tail-colors
-   (quote
-    (("#3C3D37" . 0)
-     ("#679A01" . 20)
-     ("#4BBEAE" . 30)
-     ("#1DB4D0" . 50)
-     ("#9A8F21" . 60)
-     ("#A75B00" . 70)
-     ("#F309DF" . 85)
-     ("#3C3D37" . 100))))
- '(hl-bg-colors
-   (quote
-    ("#7B6000" "#8B2C02" "#990A1B" "#93115C" "#3F4D91" "#00629D" "#00736F" "#546E00")))
- '(hl-fg-colors
-   (quote
-    ("#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36")))
+ '(highlight-tail-colors (quote (("#3C3D37" . 0)
+                                 ("#679A01" . 20)
+                                 ("#4BBEAE" . 30)
+                                 ("#1DB4D0" . 50)
+                                 ("#9A8F21" . 60)
+                                 ("#A75B00" . 70)
+                                 ("#F309DF" . 85)
+                                 ("#3C3D37" . 100))))
+ '(hl-bg-colors (quote ("#7B6000" "#8B2C02" "#990A1B" "#93115C" "#3F4D91"
+                        "#00629D" "#00736F" "#546E00")))
+ '(hl-fg-colors (quote ("#002b36" "#002b36" "#002b36" "#002b36" "#002b36"
+                        "#002b36" "#002b36" "#002b36")))
  '(hl-sexp-background-color "#1c1f26")
- '(magit-diff-arguments
-   (quote
-    ("--ignore-space-change" "--ignore-all-space" "--no-ext-diff" "--stat")))
+ '(magit-diff-arguments (quote ("--ignore-space-change" "--ignore-all-space"
+                                "--no-ext-diff" "--stat")))
  '(magit-diff-use-overlays nil)
- '(nrepl-message-colors
-   (quote
-    ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
- '(package-selected-packages
-   (quote
-    (lv transient all-the-icons memoize org-mime ghub let-alist tide typescript-mode org-category-capture emoji-cheat-sheet-plus company-emoji langtool flyspell-popup flyspell-correct-ivy flyspell-correct auto-dictionary phpunit phpcbf php-extras php-auto-yasnippets drupal-mode php-mode winum unfill ob-restclient ob-elixir fuzzy flycheck-mix flycheck-credo company-restclient know-your-http-well alchemist elixir-mode gitlab wgrep smex ivy-hydra counsel-projectile counsel swiper ivy zenburn-theme monokai-theme material-theme solarized-theme spinner pcre2el org alert log4e gntp json-snatcher json-reformat multiple-cursors parent-mode haml-mode gitignore-mode fringe-helper git-gutter+ pos-tip epl flx anzu evil goto-chg undo-tree web-completion-data dash-functional packed f dash s avy auto-complete popup package-build yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic xterm-color which-key web-mode use-package spacemacs-theme spaceline smeargle pug-mode persp-mode osx-dictionary org-projectile org-plus-contrib org-download open-junk-file ob-http neotree move-text markdown-toc markdown-mode link-hint info+ indent-guide htmlize hide-comnt helm-projectile helm-flx helm-ag google-translate git-messenger git-link git-gutter-fringe eyebrowse exec-path-from-shell evil-mc eshell-z editorconfig dumb-jump company-statistics chruby bind-key aggressive-indent ace-link iedit smartparens bind-map highlight flycheck company request helm helm-core projectile yasnippet skewer-mode js2-mode magit magit-popup git-commit with-editor hydra inf-ruby tern yaml-mode ws-butler window-numbering web-beautify wakatime-mode volatile-highlights vi-tilde-fringe uuidgen toc-org tern-auto-complete tagedit slim-mode simple-httpd shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restclient restart-emacs rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters quelpa powerline popwin pkg-info pcache pbcopy paradox osx-trash orgit org-present org-pomodoro org-bullets mwim multi-term mmm-mode minitest magit-gitflow macrostep lorem-ipsum livid-mode linum-relative less-css-mode launchctl json-mode js2-refactor js-doc ido-vertical-mode ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-mode-manager helm-make helm-gitignore helm-descbinds helm-css-scss helm-company helm-c-yasnippet graphviz-dot-mode golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-gutter-fringe+ git-gutter gh-md flycheck-pos-tip flycheck-flow flx-ido fill-column-indicator fancy-battery expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode elisp-slime-nav diminish diff-hl company-web company-tern company-flow column-enforce-mode color-theme-sanityinc-tomorrow color-identifiers-mode coffee-mode clean-aindent-mode bundler auto-yasnippet auto-highlight-symbol auto-compile async adaptive-wrap ace-window ace-jump-helm-line ac-ispell)))
+ '(nrepl-message-colors (quote ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342"
+                                "#00629D" "#2aa198" "#d33682" "#6c71c4")))
+ '(package-selected-packages (quote (lv transient all-the-icons memoize org-mime
+                                        ghub let-alist tide typescript-mode org-category-capture
+                                        emoji-cheat-sheet-plus company-emoji langtool
+                                        flyspell-popup flyspell-correct-ivy flyspell-correct
+                                        auto-dictionary phpunit phpcbf php-extras
+                                        php-auto-yasnippets drupal-mode php-mode winum
+                                        unfill ob-restclient ob-elixir fuzzy flycheck-mix
+                                        flycheck-credo company-restclient know-your-http-well
+                                        alchemist elixir-mode gitlab wgrep smex ivy-hydra
+                                        counsel-projectile counsel swiper ivy zenburn-theme
+                                        monokai-theme material-theme solarized-theme
+                                        spinner pcre2el org alert log4e gntp json-snatcher
+                                        json-reformat multiple-cursors parent-mode
+                                        haml-mode gitignore-mode fringe-helper git-gutter+
+                                        pos-tip epl flx anzu evil goto-chg undo-tree
+                                        web-completion-data dash-functional packed
+                                        f dash s avy auto-complete popup package-build
+                                        yapfify pyvenv pytest pyenv-mode py-isort
+                                        pip-requirements live-py-mode hy-mode helm-pydoc
+                                        cython-mode company-anaconda anaconda-mode
+                                        pythonic xterm-color which-key web-mode use-package
+                                        spacemacs-theme spaceline smeargle pug-mode
+                                        persp-mode osx-dictionary org-projectile org-plus-contrib
+                                        org-download open-junk-file ob-http neotree
+                                        move-text markdown-toc markdown-mode link-hint
+                                        info+ indent-guide htmlize hide-comnt helm-projectile
+                                        helm-flx helm-ag google-translate git-messenger
+                                        git-link git-gutter-fringe eyebrowse exec-path-from-shell
+                                        evil-mc eshell-z editorconfig dumb-jump company-statistics
+                                        chruby bind-key aggressive-indent ace-link
+                                        iedit smartparens bind-map highlight flycheck
+                                        company request helm helm-core projectile
+                                        yasnippet skewer-mode js2-mode magit magit-popup
+                                        git-commit with-editor hydra inf-ruby tern
+                                        yaml-mode ws-butler window-numbering web-beautify
+                                        wakatime-mode volatile-highlights vi-tilde-fringe
+                                        uuidgen toc-org tern-auto-complete tagedit
+                                        slim-mode simple-httpd shell-pop scss-mode
+                                        sass-mode rvm ruby-tools ruby-test-mode rubocop
+                                        rspec-mode robe reveal-in-osx-finder restclient
+                                        restart-emacs rbenv rake rainbow-mode rainbow-identifiers
+                                        rainbow-delimiters quelpa powerline popwin
+                                        pkg-info pcache pbcopy paradox osx-trash orgit
+                                        org-present org-pomodoro org-bullets mwim
+                                        multi-term mmm-mode minitest magit-gitflow
+                                        macrostep lorem-ipsum livid-mode linum-relative
+                                        less-css-mode launchctl json-mode js2-refactor
+                                        js-doc ido-vertical-mode ibuffer-projectile
+                                        hungry-delete hl-todo highlight-parentheses
+                                        highlight-numbers highlight-indentation help-fns+
+                                        helm-themes helm-swoop helm-mode-manager helm-make
+                                        helm-gitignore helm-descbinds helm-css-scss
+                                        helm-company helm-c-yasnippet graphviz-dot-mode
+                                        golden-ratio gnuplot gitconfig-mode gitattributes-mode
+                                        git-timemachine git-gutter-fringe+ git-gutter
+                                        gh-md flycheck-pos-tip flycheck-flow flx-ido
+                                        fill-column-indicator fancy-battery expand-region
+                                        evil-visualstar evil-visual-mark-mode evil-unimpaired
+                                        evil-tutor evil-surround evil-search-highlight-persist
+                                        evil-numbers evil-nerd-commenter evil-matchit
+                                        evil-magit evil-lisp-state evil-indent-plus
+                                        evil-iedit-state evil-exchange evil-escape
+                                        evil-ediff evil-args evil-anzu eval-sexp-fu
+                                        eshell-prompt-extras esh-help erc-yt erc-view-log
+                                        erc-terminal-notifier erc-social-graph erc-image
+                                        erc-hl-nicks emmet-mode elisp-slime-nav diminish
+                                        diff-hl company-web company-tern company-flow
+                                        column-enforce-mode color-theme-sanityinc-tomorrow
+                                        color-identifiers-mode coffee-mode clean-aindent-mode
+                                        bundler auto-yasnippet auto-highlight-symbol
+                                        auto-compile async adaptive-wrap ace-window
+                                        ace-jump-helm-line ac-ispell)))
  '(pos-tip-background-color "#A6E22E")
  '(pos-tip-foreground-color "#272822")
- '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
+ '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642"
+                                                       0.2))
  '(term-default-bg-color "#002b36")
  '(term-default-fg-color "#839496")
  '(vc-annotate-background nil)
  '(vc-annotate-background-mode nil)
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#F92672")
-     (40 . "#CF4F1F")
-     (60 . "#C26C0F")
-     (80 . "#E6DB74")
-     (100 . "#AB8C00")
-     (120 . "#A18F00")
-     (140 . "#989200")
-     (160 . "#8E9500")
-     (180 . "#A6E22E")
-     (200 . "#729A1E")
-     (220 . "#609C3C")
-     (240 . "#4E9D5B")
-     (260 . "#3C9F79")
-     (280 . "#A1EFE4")
-     (300 . "#299BA6")
-     (320 . "#2896B5")
-     (340 . "#2790C3")
-     (360 . "#66D9EF"))))
+ '(vc-annotate-color-map (quote ((20 . "#F92672")
+                                 (40 . "#CF4F1F")
+                                 (60 . "#C26C0F")
+                                 (80 . "#E6DB74")
+                                 (100 . "#AB8C00")
+                                 (120 . "#A18F00")
+                                 (140 . "#989200")
+                                 (160 . "#8E9500")
+                                 (180 . "#A6E22E")
+                                 (200 . "#729A1E")
+                                 (220 . "#609C3C")
+                                 (240 . "#4E9D5B")
+                                 (260 . "#3C9F79")
+                                 (280 . "#A1EFE4")
+                                 (300 . "#299BA6")
+                                 (320 . "#2896B5")
+                                 (340 . "#2790C3")
+                                 (360 . "#66D9EF"))))
  '(vc-annotate-very-old-color nil)
- '(weechat-color-list
-   (unspecified "#272822" "#3C3D37" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0"))
- '(xterm-color-names
-   ["#073642" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#eee8d5"])
- '(xterm-color-names-bright
-   ["#002b36" "#cb4b16" "#586e75" "#657b83" "#839496" "#6c71c4" "#93a1a1" "#fdf6e3"]))
+ '(weechat-color-list (unspecified "#272822" "#3C3D37" "#F70057"
+                                   "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74"
+                                   "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD"
+                                   "#A1EFE4" "#F8F8F2" "#F8F8F0"))
+ '(xterm-color-names ["#073642" "#dc322f" "#859900" "#b58900" "#268bd2"
+                      "#d33682" "#2aa198" "#eee8d5"])
+ '(xterm-color-names-bright ["#002b36" "#cb4b16" "#586e75" "#657b83" "#839496"
+                             "#6c71c4" "#93a1a1" "#fdf6e3"]))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -653,85 +770,166 @@ layers configuration. You are free to put any user code."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["#272822" "#F92672" "#A6E22E" "#E6DB74" "#66D9EF" "#FD5FF0" "#A1EFE4" "#F8F8F2"])
- '(compilation-message-face 'default)
- '(cua-global-mark-cursor-color "#2aa198")
- '(cua-normal-cursor-color "#839496")
- '(cua-overwrite-cursor-color "#b58900")
- '(cua-read-only-cursor-color "#859900")
- '(evil-want-Y-yank-to-eol nil)
- '(highlight-changes-colors '("#FD5FF0" "#AE81FF"))
- '(highlight-symbol-colors
-   (--map
-    (solarized-color-blend it "#002b36" 0.25)
-    '("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2")))
- '(highlight-symbol-foreground-color "#93a1a1")
- '(highlight-tail-colors
-   '(("#3C3D37" . 0)
-     ("#679A01" . 20)
-     ("#4BBEAE" . 30)
-     ("#1DB4D0" . 50)
-     ("#9A8F21" . 60)
-     ("#A75B00" . 70)
-     ("#F309DF" . 85)
-     ("#3C3D37" . 100)))
- '(hl-bg-colors
-   '("#7B6000" "#8B2C02" "#990A1B" "#93115C" "#3F4D91" "#00629D" "#00736F" "#546E00"))
- '(hl-fg-colors
-   '("#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36"))
- '(hl-sexp-background-color "#1c1f26")
- '(magit-diff-arguments
-   '("--ignore-space-change" "--ignore-all-space" "--no-ext-diff" "--stat"))
- '(magit-diff-use-overlays nil)
- '(nrepl-message-colors
-   '("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4"))
- '(package-selected-packages
-   '(csv-mode lv transient all-the-icons memoize org-mime ghub let-alist tide typescript-mode org-category-capture emoji-cheat-sheet-plus company-emoji langtool flyspell-popup flyspell-correct-ivy flyspell-correct auto-dictionary phpunit phpcbf php-extras php-auto-yasnippets drupal-mode php-mode winum unfill ob-restclient ob-elixir fuzzy flycheck-mix flycheck-credo company-restclient know-your-http-well alchemist elixir-mode gitlab wgrep smex ivy-hydra counsel-projectile counsel swiper ivy zenburn-theme monokai-theme material-theme solarized-theme spinner pcre2el org alert log4e gntp json-snatcher json-reformat multiple-cursors parent-mode haml-mode gitignore-mode fringe-helper git-gutter+ pos-tip epl flx anzu evil goto-chg undo-tree web-completion-data dash-functional packed f dash s avy auto-complete popup package-build yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic xterm-color which-key web-mode use-package spacemacs-theme spaceline smeargle pug-mode persp-mode osx-dictionary org-projectile org-plus-contrib org-download open-junk-file ob-http neotree move-text markdown-toc markdown-mode link-hint info+ indent-guide htmlize hide-comnt helm-projectile helm-flx helm-ag google-translate git-messenger git-link git-gutter-fringe eyebrowse exec-path-from-shell evil-mc eshell-z editorconfig dumb-jump company-statistics chruby bind-key aggressive-indent ace-link iedit smartparens bind-map highlight flycheck company request helm helm-core projectile yasnippet skewer-mode js2-mode magit magit-popup git-commit with-editor hydra inf-ruby tern yaml-mode ws-butler window-numbering web-beautify wakatime-mode volatile-highlights vi-tilde-fringe uuidgen toc-org tern-auto-complete tagedit slim-mode simple-httpd shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restclient restart-emacs rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters quelpa powerline popwin pkg-info pcache pbcopy paradox osx-trash orgit org-present org-pomodoro org-bullets mwim multi-term mmm-mode minitest magit-gitflow macrostep lorem-ipsum livid-mode linum-relative less-css-mode launchctl json-mode js2-refactor js-doc ido-vertical-mode ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-mode-manager helm-make helm-gitignore helm-descbinds helm-css-scss helm-company helm-c-yasnippet graphviz-dot-mode golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-gutter-fringe+ git-gutter gh-md flycheck-pos-tip flycheck-flow flx-ido fill-column-indicator fancy-battery expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode elisp-slime-nav diminish diff-hl company-web company-tern company-flow column-enforce-mode color-theme-sanityinc-tomorrow color-identifiers-mode coffee-mode clean-aindent-mode bundler auto-yasnippet auto-highlight-symbol auto-compile async adaptive-wrap ace-window ace-jump-helm-line ac-ispell))
- '(pos-tip-background-color "#A6E22E")
- '(pos-tip-foreground-color "#272822")
- '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
- '(term-default-bg-color "#002b36")
- '(term-default-fg-color "#839496")
- '(vc-annotate-background nil)
- '(vc-annotate-background-mode nil)
- '(vc-annotate-color-map
-   '((20 . "#F92672")
-     (40 . "#CF4F1F")
-     (60 . "#C26C0F")
-     (80 . "#E6DB74")
-     (100 . "#AB8C00")
-     (120 . "#A18F00")
-     (140 . "#989200")
-     (160 . "#8E9500")
-     (180 . "#A6E22E")
-     (200 . "#729A1E")
-     (220 . "#609C3C")
-     (240 . "#4E9D5B")
-     (260 . "#3C9F79")
-     (280 . "#A1EFE4")
-     (300 . "#299BA6")
-     (320 . "#2896B5")
-     (340 . "#2790C3")
-     (360 . "#66D9EF")))
- '(vc-annotate-very-old-color nil)
- '(weechat-color-list
-   (unspecified "#272822" "#3C3D37" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0"))
- '(xterm-color-names
-   ["#073642" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#eee8d5"])
- '(xterm-color-names-bright
-   ["#002b36" "#cb4b16" "#586e75" "#657b83" "#839496" "#6c71c4" "#93a1a1" "#fdf6e3"]))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(ansi-color-faces-vector [default default default italic underline
+                                      success warning error])
+   '(ansi-color-names-vector ["#272822" "#F92672" "#A6E22E" "#E6DB74" "#66D9EF"
+                              "#FD5FF0" "#A1EFE4" "#F8F8F2"])
+   '(compilation-message-face 'default)
+   '(cua-global-mark-cursor-color "#2aa198")
+   '(cua-normal-cursor-color "#839496")
+   '(cua-overwrite-cursor-color "#b58900")
+   '(cua-read-only-cursor-color "#859900")
+   '(evil-want-Y-yank-to-eol nil)
+   '(highlight-changes-colors '("#FD5FF0" "#AE81FF"))
+   '(highlight-symbol-colors (--map (solarized-color-blend it "#002b36" 0.25)
+                                    '("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900"
+                                      "#cb4b16" "#268bd2")))
+   '(highlight-symbol-foreground-color "#93a1a1")
+   '(highlight-tail-colors '(("#3C3D37" . 0)
+                             ("#679A01" . 20)
+                             ("#4BBEAE" . 30)
+                             ("#1DB4D0" . 50)
+                             ("#9A8F21" . 60)
+                             ("#A75B00" . 70)
+                             ("#F309DF" . 85)
+                             ("#3C3D37" . 100)))
+   '(hl-bg-colors '("#7B6000" "#8B2C02" "#990A1B" "#93115C" "#3F4D91"
+                    "#00629D" "#00736F" "#546E00"))
+   '(hl-fg-colors '("#002b36" "#002b36" "#002b36" "#002b36" "#002b36"
+                    "#002b36" "#002b36" "#002b36"))
+   '(hl-sexp-background-color "#1c1f26")
+   '(magit-diff-arguments '("--ignore-space-change" "--ignore-all-space"
+                            "--no-ext-diff" "--stat"))
+   '(magit-diff-use-overlays nil)
+   '(nrepl-message-colors '("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342"
+                            "#00629D" "#2aa198" "#d33682" "#6c71c4"))
+   '(package-selected-packages '(copilot srefactor stickyfunc-enhance lv transient
+                                         all-the-icons memoize org-mime ghub let-alist
+                                         tide typescript-mode org-category-capture
+                                         emoji-cheat-sheet-plus company-emoji langtool
+                                         flyspell-popup flyspell-correct-ivy flyspell-correct
+                                         auto-dictionary phpunit phpcbf php-extras
+                                         php-auto-yasnippets drupal-mode php-mode winum
+                                         unfill ob-restclient ob-elixir fuzzy flycheck-mix
+                                         flycheck-credo company-restclient know-your-http-well
+                                         alchemist elixir-mode gitlab wgrep smex ivy-hydra
+                                         counsel-projectile counsel swiper ivy zenburn-theme
+                                         monokai-theme material-theme solarized-theme
+                                         spinner pcre2el org alert log4e gntp json-snatcher
+                                         json-reformat multiple-cursors parent-mode
+                                         haml-mode gitignore-mode fringe-helper git-gutter+
+                                         pos-tip epl flx anzu evil goto-chg undo-tree
+                                         web-completion-data dash-functional packed
+                                         f dash s avy auto-complete popup package-build
+                                         yapfify pyvenv pytest pyenv-mode py-isort
+                                         pip-requirements live-py-mode hy-mode helm-pydoc
+                                         cython-mode company-anaconda anaconda-mode
+                                         pythonic xterm-color which-key web-mode use-package
+                                         spacemacs-theme spaceline smeargle pug-mode
+                                         persp-mode osx-dictionary org-projectile org-plus-contrib
+                                         org-download open-junk-file ob-http neotree
+                                         move-text markdown-toc markdown-mode link-hint
+                                         info+ indent-guide htmlize hide-comnt helm-projectile
+                                         helm-flx helm-ag google-translate git-messenger
+                                         git-link git-gutter-fringe eyebrowse exec-path-from-shell
+                                         evil-mc eshell-z editorconfig dumb-jump company-statistics
+                                         chruby bind-key aggressive-indent ace-link
+                                         iedit smartparens bind-map highlight flycheck
+                                         company request helm helm-core projectile
+                                         yasnippet skewer-mode js2-mode magit magit-popup
+                                         git-commit with-editor hydra inf-ruby tern
+                                         yaml-mode ws-butler window-numbering web-beautify
+                                         wakatime-mode volatile-highlights vi-tilde-fringe
+                                         uuidgen toc-org tern-auto-complete tagedit
+                                         slim-mode simple-httpd shell-pop scss-mode
+                                         sass-mode rvm ruby-tools ruby-test-mode rubocop
+                                         rspec-mode robe reveal-in-osx-finder restclient
+                                         restart-emacs rbenv rake rainbow-mode rainbow-identifiers
+                                         rainbow-delimiters quelpa powerline popwin
+                                         pkg-info pcache pbcopy paradox osx-trash orgit
+                                         org-present org-pomodoro org-bullets mwim
+                                         multi-term mmm-mode minitest magit-gitflow
+                                         macrostep lorem-ipsum livid-mode linum-relative
+                                         less-css-mode launchctl json-mode js2-refactor
+                                         js-doc ido-vertical-mode ibuffer-projectile
+                                         hungry-delete hl-todo highlight-parentheses
+                                         highlight-numbers highlight-indentation help-fns+
+                                         helm-themes helm-swoop helm-mode-manager helm-make
+                                         helm-gitignore helm-descbinds helm-css-scss
+                                         helm-company helm-c-yasnippet graphviz-dot-mode
+                                         golden-ratio gnuplot gitconfig-mode gitattributes-mode
+                                         git-timemachine git-gutter-fringe+ git-gutter
+                                         gh-md flycheck-pos-tip flycheck-flow flx-ido
+                                         fill-column-indicator fancy-battery expand-region
+                                         evil-visualstar evil-visual-mark-mode evil-unimpaired
+                                         evil-tutor evil-surround evil-search-highlight-persist
+                                         evil-numbers evil-nerd-commenter evil-matchit
+                                         evil-magit evil-lisp-state evil-indent-plus
+                                         evil-iedit-state evil-exchange evil-escape
+                                         evil-ediff evil-args evil-anzu eval-sexp-fu
+                                         eshell-prompt-extras esh-help erc-yt erc-view-log
+                                         erc-terminal-notifier erc-social-graph erc-image
+                                         erc-hl-nicks emmet-mode elisp-slime-nav diminish
+                                         diff-hl company-web company-tern company-flow
+                                         column-enforce-mode color-theme-sanityinc-tomorrow
+                                         color-identifiers-mode coffee-mode clean-aindent-mode
+                                         bundler auto-yasnippet auto-highlight-symbol
+                                         auto-compile async adaptive-wrap ace-window
+                                         ace-jump-helm-line ac-ispell))
+   '(pos-tip-background-color "#A6E22E")
+   '(pos-tip-foreground-color "#272822")
+   '(safe-local-variable-values '((eval let
+                                        ((project-directory (car (dir-locals-find-file default-directory))))
+                                        (setq lsp-clients-typescript-server-args `("--tsserver-path" ,(concat project-directory ".yarn/sdks/typescript/bin/tsserver")
+                                                                                   "--stdio")))
+                                  (typescript-backend . tide)
+                                  (typescript-backend . lsp)
+                                  (javascript-backend . tide)
+                                  (javascript-backend . tern)
+                                  (javascript-backend . lsp)))
+   '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642"
+                                                         0.2))
+   '(term-default-bg-color "#002b36")
+   '(term-default-fg-color "#839496")
+   '(vc-annotate-background nil)
+   '(vc-annotate-background-mode nil)
+   '(vc-annotate-color-map '((20 . "#F92672")
+                             (40 . "#CF4F1F")
+                             (60 . "#C26C0F")
+                             (80 . "#E6DB74")
+                             (100 . "#AB8C00")
+                             (120 . "#A18F00")
+                             (140 . "#989200")
+                             (160 . "#8E9500")
+                             (180 . "#A6E22E")
+                             (200 . "#729A1E")
+                             (220 . "#609C3C")
+                             (240 . "#4E9D5B")
+                             (260 . "#3C9F79")
+                             (280 . "#A1EFE4")
+                             (300 . "#299BA6")
+                             (320 . "#2896B5")
+                             (340 . "#2790C3")
+                             (360 . "#66D9EF")))
+   '(vc-annotate-very-old-color nil)
+   '(warning-suppress-types '((comp)))
+   '(weechat-color-list (unspecified "#272822" "#3C3D37" "#F70057"
+                                     "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74"
+                                     "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD"
+                                     "#A1EFE4" "#F8F8F2" "#F8F8F0"))
+   '(xterm-color-names ["#073642" "#dc322f" "#859900" "#b58900" "#268bd2"
+                        "#d33682" "#2aa198" "#eee8d5"])
+   '(xterm-color-names-bright ["#002b36" "#cb4b16" "#586e75" "#657b83" "#839496"
+                               "#6c71c4" "#93a1a1" "#fdf6e3"]))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(highlight-parentheses-highlight ((nil (:weight ultra-bold)))
+                                     t)))

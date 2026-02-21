@@ -29,6 +29,13 @@ Software from MAS will be installed by Homebrew using [`mas-cli`](https://github
 ## Shell setup
 The setup is managed by [zplug](https://github.com/zplug/zplug). Binary packages are contained in `Brewfile`, everything else will be installed automatically by zplug.
 
+For Homebrew API rate limits, the shell loads a GitHub token from 1Password only when `brew` is executed.
+Expected default 1Password reference:
+`op://Personal/Homebrew GitHub API Token/credential`
+
+You can override the item path with:
+`export OP_HOMEBREW_GITHUB_TOKEN_REF="op://<Vault>/<Item>/credential"`
+
 ## Emacs / spacemacs
 1. `ln -s ~/dotfiles/spacemacs .spacemacs`
 2. `git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d`

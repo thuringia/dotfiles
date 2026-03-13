@@ -21,3 +21,7 @@
 	rebase = true
 [init]
 	defaultBranch = master
+[alias]
+	dsf = -c diff.external=difft -c pager.diff=false diff
+[include]
+	path = ~/.gitconfig.local

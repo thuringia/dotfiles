@@ -70,6 +70,15 @@ POWERLEVEL9K_RPROMPT_ON_NEWLINE=true
 # https://github.com/zplug/zplug
 zplug_init=""
 zplug_prefix=""
+
+# Keep mutable zplug state in the home directory even when the code comes from Homebrew.
+export ZPLUG_HOME="$HOME/.zplug"
+export ZPLUG_LOADFILE="$ZPLUG_HOME/packages.zsh"
+export ZPLUG_ERROR_LOG="$ZPLUG_HOME/.error_log"
+export ZPLUG_BIN="$ZPLUG_HOME/bin"
+export ZPLUG_CACHE_DIR="$ZPLUG_HOME/cache"
+export ZPLUG_REPOS="$ZPLUG_HOME/repos"
+
 if [ -r "/opt/homebrew/opt/zplug/init.zsh" ]; then
 	zplug_prefix="/opt/homebrew/opt/zplug"
 elif [ -r "/usr/local/opt/zplug/init.zsh" ]; then
@@ -86,6 +95,7 @@ fi
 
 if [ -n "$zplug_init" ]; then
 	source "$zplug_init"
+	zplug "lib/async_prompt", from:oh-my-zsh
 	zplug "lib/clipboard", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
 
 	# Bundles from the default repo (robbyrussell's oh-my-zsh).
@@ -117,7 +127,6 @@ if [ -n "$zplug_init" ]; then
 	zplug "plugins/git", from:oh-my-zsh
 	zplug "unixorn/git-extra-commands"
 	zplug "smallhadroncollider/antigen-git-rebase"
-	zplug "so-fancy/diff-so-fancy", as:command, use:bin/git-dsf
 
 	# add tools
 	zplug "walesmd/caniuse.plugin.zsh", \
@@ -160,5 +169,10 @@ path=("$HOME/.antigravity/antigravity/bin" $path)
 if command -v openclaw >/dev/null 2>&1; then
 	source <(openclaw completion --shell zsh)
 fi
+
+export PATH
+
+# LM Studio CLI installs here by default when present.
+[ -d "$HOME/.cache/lm-studio/bin" ] && path+=("$HOME/.cache/lm-studio/bin")
 
 export PATH

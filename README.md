@@ -36,8 +36,16 @@ Expected default 1Password reference:
 You can override the item path with:
 `export OP_HOMEBREW_GITHUB_TOKEN_REF="op://<Vault>/<Item>/credential"`
 
+## Git setup
+Use the shared repo config from `~/dotfiles/gitconfig` and keep machine-specific overrides in `~/.gitconfig.local`.
+
+If the shared include is missing, add it once:
+`git config --global --get-all include.path | grep -Fx "$HOME/dotfiles/gitconfig" >/dev/null || git config --global --add include.path "$HOME/dotfiles/gitconfig"`
+
 ## Emacs / spacemacs
 1. `ln -s ~/dotfiles/spacemacs .spacemacs`
 2. `git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d`
+3. Optional Emacs+ cask icon override:
+`mkdir -p ~/.config/emacs-plus && printf "icon: spacemacs\n" > ~/.config/emacs-plus/build.yml`
 
 It is recommended to use the develop branch for spacemacs.

@@ -54,25 +54,20 @@ This function should only modify configuration layer settings."
      helm
      hackernews
      (javascript :variables javascript-backend     'lsp
-                 javascript-fmt-tool    'prettier
-                 javascript-import-tool 'import-js
-                 javascript-fmt-on-save t
+                 javascript-fmt-on-save nil
                  javascript-lsp-linter  nil
                  node-add-modules-path  t)
-     (typescript :variables typescript-fmt-tool    'prettier
-                 typescript-fmt-on-save t
-                 typescript-linter      'eslint
+     (typescript :variables typescript-fmt-on-save nil
+                 typescript-linter      nil
                  typescript-backend     'lsp
                  typescript-lsp-linter  nil)
-     (json :variables json-fmt-tool    'prettier
-           json-fmt-on-save t)
+     (json :variables json-fmt-on-save nil)
      lsp
      markdown
      multiple-cursors
      org
      (osx :variables osx-option-as 'meta
           osx-right-option-as 'none)
-     prettier
      react
      restclient
      ;;(ruby :variables
@@ -80,7 +75,7 @@ This function should only modify configuration layer settings."
      semantic
      (shell :variables shell-default-height
             30 shell-default-position 'bottom shell-default-term-shell
-            "/usr/local/bin/zsh")
+            (or (executable-find "zsh") shell-file-name))
      syntax-checking
      (treemacs :variables treemacs-use-follow-mode
                t treemacs-use-filewatch-mode t treemacs-use-git-mode
@@ -100,9 +95,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages
    '((copilot :location (recipe :fetcher github
                                 :repo "zerolfx/copilot.el"
-                                :files ("*.el" "dist")))
-     (lsp-biome :location (recipe :fetcher github
-                                  :repo "cxa/lsp-biome")))
+                                :files ("*.el" "dist"))))
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
 
@@ -607,6 +600,73 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  (defun rw/lsp-format-buffer-if-active ()
+    "Format buffer when lsp-mode is active."
+    (when (bound-and-true-p lsp-mode)
+      (lsp-format-buffer)))
+
+  (defun rw/enable-oxfmt-format-on-save ()
+    "Enable LSP format-on-save for JS/TS/JSON buffers."
+    (add-hook 'before-save-hook #'rw/lsp-format-buffer-if-active nil t))
+
+  (defun rw/project-local-node-bin (tool)
+    "Return TOOL from the current project's node_modules/.bin when available."
+    (let* ((dir (or (and buffer-file-name
+                         (file-name-directory buffer-file-name))
+                    default-directory))
+           (root (or (locate-dominating-file dir "package.json")
+                     (locate-dominating-file dir "node_modules")))
+           (bin (and root
+                     (expand-file-name (concat "node_modules/.bin/" tool) root))))
+      (when (and bin (file-executable-p bin))
+        bin)))
+
+  (defun rw/ox-lsp-executable (tool)
+    "Resolve TOOL for LSP, preferring the project-local installation."
+    (or (rw/project-local-node-bin tool)
+        (executable-find tool)))
+
+  (defun rw/ox-lsp-command (tool)
+    "Return the LSP command for TOOL, or nil when it is unavailable."
+    (when-let ((executable (rw/ox-lsp-executable tool)))
+      (list executable "--lsp")))
+
+  (dolist (hook '(js-mode-hook js2-mode-hook js-ts-mode-hook rjsx-mode-hook
+                               typescript-mode-hook typescript-ts-mode-hook tsx-ts-mode-hook
+                               json-mode-hook json-ts-mode-hook))
+    (add-hook hook #'rw/enable-oxfmt-format-on-save))
+
+  (with-eval-after-load 'lsp-mode
+    (when (and (boundp 'lsp-clients)
+               (fboundp 'lsp-register-client)
+               (fboundp 'make-lsp-client)
+               (fboundp 'lsp-stdio-connection))
+      (let ((rw/ox-major-modes
+             '(js-mode js2-mode js-ts-mode rjsx-mode
+                       typescript-mode typescript-ts-mode tsx-ts-mode
+                       json-mode json-ts-mode)))
+        (unless (gethash 'oxfmt-ls lsp-clients)
+          (lsp-register-client
+           (make-lsp-client
+            :new-connection (lsp-stdio-connection
+                             (lambda () (rw/ox-lsp-command "oxfmt"))
+                             (lambda () (rw/ox-lsp-executable "oxfmt")))
+            :major-modes rw/ox-major-modes
+            :priority 2
+            :multi-root t
+            :server-id 'oxfmt-ls)))
+        (unless (gethash 'oxlint-ls lsp-clients)
+          (lsp-register-client
+           (make-lsp-client
+            :new-connection (lsp-stdio-connection
+                             (lambda () (rw/ox-lsp-command "oxlint"))
+                             (lambda () (rw/ox-lsp-executable "oxlint")))
+            :major-modes rw/ox-major-modes
+            :priority 1
+            :add-on? t
+            :multi-root t
+            :server-id 'oxlint-ls))))))
+
   ;; accept completion from copilot and fallback to company
   ;; https://github.com/zerolfx/copilot.el
   (with-eval-after-load 'company
@@ -618,10 +678,7 @@ before packages are loaded."
     (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion))
   (add-hook 'prog-mode-hook 'copilot-mode)
   (define-key evil-insert-state-map (kbd "C-<tab>") 'copilot-accept-completion-by-word)
-  (define-key evil-insert-state-map (kbd "C-TAB") 'copilot-accept-completion-by-word)
-
-
-  )
+  (define-key evil-insert-state-map (kbd "C-TAB") 'copilot-accept-completion-by-word))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
